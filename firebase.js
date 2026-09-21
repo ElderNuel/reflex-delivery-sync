@@ -10,8 +10,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAwtJj_eRuROtBoLdek-TLxLqRC4lOc3cM",
+let firebaseConfig = {
+    apiKey: "",
     authDomain: "reflex-779d1.firebaseapp.com",
     databaseURL: "https://reflex-779d1-default-rtdb.firebaseio.com",
     projectId: "reflex-779d1",
@@ -21,6 +21,15 @@ const firebaseConfig = {
     measurementId: "G-QRW0KBDJR6"
 };
 
+try {
+    const res = await fetch("/api/config");
+    if (res.ok) {
+        const config = await res.json();
+        firebaseConfig = { ...firebaseConfig, ...config };
+    }
+} catch (err) {
+    console.warn("Could not load /api/config, falling back to default config", err);
+}
 
 const app = initializeApp(firebaseConfig);
 

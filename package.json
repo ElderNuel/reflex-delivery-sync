@@ -2,9 +2,12 @@
   "name": "reflex",
   "version": "1.0.0",
   "description": "Reflex is a prototype delivery coordination system designed for small retailers.",
-  "main": "firebase.js",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "echo 'Build complete'"
   },
   "repository": {
     "type": "git",
@@ -13,12 +16,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/TracyNjoroge/reflex-delivery-sync/issues"
   },
   "homepage": "https://github.com/TracyNjoroge/reflex-delivery-sync#readme",
   "dependencies": {
+    "express": "^5.2.1",
     "firebase": "^12.18.0"
   }
 }

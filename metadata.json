@@ -1,0 +1,6 @@
+{
+  "name": "Reflex Delivery Coordination System",
+  "description": "Real-time delivery coordination prototype connecting retailers, dispatchers, and riders.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
