@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Request System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/tabler-icons.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --surface-0: #f9f8f6;
+      --surface-1: #f0ede8;
+      --surface-2: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --text-muted: #999999;
+      --text-danger: #d32f2f;
+      --text-accent: #0066cc;
+      --text-success: #2e7d32;
+      --fill-accent: #0066cc;
+      --fill-success: #2e7d32;
+      --on-accent: #ffffff;
+      --on-success: #ffffff;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(0, 0, 0, 0.12);
+      --radius: 8px;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface-0: #1a1a1a;
+        --surface-1: #2a2a2a;
+        --surface-2: #242424;
+        --text-primary: #f0f0f0;
+        --text-secondary: #b0b0b0;
+        --text-muted: #808080;
+        --border: rgba(255, 255, 255, 0.1);
+        --border-strong: rgba(255, 255, 255, 0.15);
+      }
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      background: var(--surface-0);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--surface-0);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: var(--surface-2);
+      border-bottom: 0.5px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      animation: slideDown 0.4s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: -0.3px;
+    }
+
+    .header p {
+      margin: 0.5rem 0 0 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding: 0 1.5rem;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 1.5rem;
+      right: 1.5rem;
+      height: 1px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      background: var(--surface-1);
+      border: 2px solid var(--border);
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .step.active .step-number {
+      background: var(--fill-accent);
+      color: var(--on-accent);
+      border-color: var(--fill-accent);
+      box-shadow: 0 0 0 8px rgba(0, 102, 204, 0.1);
+      transform: scale(1.1);
+    }
+
+    .step.completed .step-number {
+      background: var(--fill-success);
+      color: var(--on-success);
+      border-color: var(--fill-success);
+      animation: popIn 0.4s ease-out;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0.8);
+      }
+      50% {
+        transform: scale(1.15);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .step-label {
+      font-size: 12px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .step.active .step-label {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .content {
+      padding: 0 1.5rem 2rem;
+      flex: 1;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .step-content {
+      animation: slideInUp 0.4s ease-out;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.85rem 0.9rem;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--text-primary);
+      background: var(--surface-2);
+      transition: all 0.2s ease;
+    }
+
+    .form-group input::placeholder,
+    .form-group select::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-group input:hover,
+    .form-group select:hover,
+    .form-group textarea:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--fill-accent);
+      background: var(--surface-2);
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.08);
+    }
+
+    .form-group input.error-field,
+    .form-group select.error-field {
+      border-color: var(--text-danger);
+    }
+
+    .form-group input.error-field:focus,
+    .form-group select.error-field:focus {
+      box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+    }
+
+    .form-group input.success-field {
+      border-color: var(--fill-success);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: var(--font-sans);
+    }
+
+    .error {
+      font-size: 12px;
+      color: var(--text-danger);
+      margin-top: 0.4rem;
+      display: none;
+      font-weight: 500;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .error.show {
+      display: block;
+    }
+
+    .success-check {
+      display: none;
+      color: var(--fill-success);
+      font-size: 12px;
+      margin-top: 0.4rem;
+      font-weight: 500;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .success-check.show {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .review-item {
+      background: var(--surface-1);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s ease;
+      animation: slideInUp 0.4s ease-out;
+    }
+
+    .review-item:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+    }
+
+    .review-item-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .review-item-value {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .confirmation {
+      text-align: center;
+      padding: 2rem 1rem;
+      animation: slideInUp 0.5s ease-out;
+    }
+
+    .confirmation-icon {
+      font-size: 64px;
+      margin-bottom: 1.5rem;
+      color: var(--fill-success);
+      animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .confirmation h2 {
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.3px;
+    }
+
+    .confirmation p {
+      color: var(--text-secondary);
+      margin: 0 0 1rem;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .request-id {
+      background: linear-gradient(135deg, rgba(0, 102, 204, 0.05), rgba(0, 102, 204, 0.02));
+      border: 1px solid var(--fill-accent);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-accent);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      word-break: break-all;
+    }
+
+    .request-id span {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 14px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+      padding: 0 1.5rem 2rem;
+      animation: slideUp 0.4s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    button {
+      flex: 1;
+      padding: 0.85rem 1.2rem;
+      border: 0.5px solid var(--border-strong);
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      letter-spacing: -0.2px;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--surface-1);
+      border-color: var(--border);
+      transform: translateY(-1px);
+    }
+
+    button:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--fill-accent);
+      color: var(--on-accent);
+      border-color: var(--fill-accent);
+      font-weight: 600;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--fill-accent);
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 102, 204, 0.2);
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .icon {
+      display: inline-block;
+      width: 1.2em;
+      height: 1.2em;
+      vertical-align: -0.2em;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 1rem 1.5rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--fill-accent);
+      width: 25%;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0, 102, 204, 0.2);
+      border-top-color: var(--fill-accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--surface-2);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      animation: slideUp 0.3s ease-out;
+      max-width: 300px;
+      font-size: 13px;
+      z-index: 1000;
+    }
+
+    .toast.success {
+      border-left: 3px solid var(--fill-success);
+    }
+
+    .toast.error {
+      border-left: 3px solid var(--text-danger);
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        min-height: auto;
+      }
+
+      .header {
+        padding: 1.2rem;
+      }
+
+      .header h1 {
+        font-size: 18px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      .steps {
+        gap: 4px;
+      }
+
+      .step-label {
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>
+        <i class="icon ti ti-package"></i>Delivery Request System
+      </h1>
+      <p>Create and manage delivery requests</p>
+    </div>
+
+    <div class="steps">
+      <div class="step completed" id="step1">
+        <div class="step-number">
+          <i class="ti ti-check" style="font-size: 16px;"></i>
+        </div>
+        <div class="step-label">Open Form</div>
+      </div>
+      <div class="step active" id="step2">
+        <div class="step-number">2</div>
+        <div class="step-label">Fill Details</div>
+      </div>
+      <div class="step" id="step3">
+        <div class="step-number">3</div>
+        <div class="step-label">Review</div>
+      </div>
+      <div class="step" id="step4">
+        <div class="step-number">4</div>
+        <div class="step-label">Confirm</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div id="formStep" class="step-content">
+        <form id="deliveryForm">
+          <div class="form-group">
+            <label for="retailerName">Retailer Name</label>
+            <input type="text" id="retailerName" name="retailerName" placeholder="Enter your store name" required>
+            <div class="error" id="retailerNameError">Retailer name is required</div>
+          </div>
+
+          <div class="form-group">
+            <label for="location">Store Location</label>
+            <input type="text" id="location" name="location" placeholder="City, State" required>
+            <div class="error" id="locationError">Location is required</div>
+          </div>
+
+          <div class="form-group">
+            <label for="contactPerson">Contact Person</label>
+            <input type="text" id="contactPerson" name="contactPerson" placeholder="Full name" required>
+            <div class="error" id="contactPersonError">Contact person is required</div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567" required>
+            <div class="error" id="phoneError">Valid phone number is required</div>
+          </div>
+
+          <div class="form-group">
+            <label for="deliveryDate">Preferred Delivery Date</label>
+            <input type="date" id="deliveryDate" name="deliveryDate" required>
+            <div class="error" id="deliveryDateError">Delivery date is required</div>
+          </div>
+
+          <div class="form-group">
+            <label for="productType">Product Category</label>
+            <select id="productType" name="productType" required>
+              <option value="">Select a category</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Clothing">Clothing & Apparel</option>
+              <option value="Groceries">Groceries & Food</option>
+              <option value="Home">Home & Garden</option>
+              <option value="Other">Other</option>
+            </select>
+            <div class="error" id="productTypeError">Product category is required</div>
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">Quantity (units)</label>
+            <input type="number" id="quantity" name="quantity" placeholder="Number of units" required>
+            <div class="error" id="quantityError">Quantity is required and must be greater than 0</div>
+          </div>
+
+          <div class="form-group">
+            <label for="specialInstructions">Special Instructions</label>
+            <textarea id="specialInstructions" name="specialInstructions" placeholder="Any special handling or delivery notes..."></textarea>
+          </div>
+        </form>
+      </div>
+
+      <div id="reviewStep" class="step-content hidden">
+        <h2 style="font-size: 18px; font-weight: 500; margin: 0 0 1.5rem;">Review your request</h2>
+        <div class="review-item">
+          <div class="review-item-label">Retailer Name</div>
+          <div class="review-item-value" id="reviewRetailerName"></div>
+        </div>
+        <div class="review-item">
+          <div class="review-item-label">Store Location</div>
+          <div class="review-item-value" id="reviewLocation"></div>
+        </div>
+        <div class="review-item">
+          <div class="review-item-label">Contact Person</div>
+          <div class="review-item-value" id="reviewContactPerson"></div>
+        </div>
+        <div class="review-item">
+          <div class="review-item-label">Phone Number</div>
+          <div class="review-item-value" id="reviewPhone"></div>
+        </div>
+        <div class="review-item">
+          <div class="review-item-label">Preferred Delivery Date</div>
+          <div class="review-item-value" id="reviewDeliveryDate"></div>
+        </div>
+        <div class="review-item">
+          <div class="review-item-label">Product Category</div>
+          <div class="review-item-value" id="reviewProductType"></div>
+        </div>
+        <div class="review-item">
+          <div class="review-item-label">Quantity</div>
+          <div class="review-item-value" id="reviewQuantity"></div>
+        </div>
+        <div id="specialInstructionsSection" class="review-item hidden">
+          <div class="review-item-label">Special Instructions</div>
+          <div class="review-item-value" id="reviewSpecialInstructions"></div>
+        </div>
+      </div>
+
+      <div id="confirmationStep" class="step-content hidden">
+        <div class="confirmation">
+          <div class="confirmation-icon">
+            <i class="ti ti-circle-check"></i>
+          </div>
+          <h2>Request created successfully</h2>
+          <p>Your delivery request has been submitted and is being processed.</p>
+          <div class="request-id">
+            Request ID: <span id="requestId"></span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary);">
+            You'll receive a confirmation email shortly with tracking details and estimated delivery time.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button id="backBtn" onclick="previousStep()">Back</button>
+      <button id="nextBtn" class="btn-primary" onclick="nextStep()">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    const totalSteps = 4;
+    const STORAGE_KEY = 'deliveryFormData';
+
+    // Initialize
+    loadFormData();
+    updateStepIndicator();
+    showStep(currentStep);
+
+    // Update progress bar on page
+    function updateProgressBar() {
+      const progress = (currentStep / totalSteps) * 100;
+      let progressEl = document.querySelector('.progress-fill');
+      if (!progressEl) {
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        progressBar.innerHTML = '<div class="progress-fill"></div>';
+        document.querySelector('.header').appendChild(progressBar);
+        progressEl = progressBar.querySelector('.progress-fill');
+      }
+      progressEl.style.width = progress + '%';
+    }
+
+    // Step indicator update with animation
+    function updateStepIndicator() {
+      for (let i = 1; i <= totalSteps; i++) {
+        const stepEl = document.getElementById(`step${i}`);
+        stepEl.classList.remove('active', 'completed');
+        if (i < currentStep) {
+          stepEl.classList.add('completed');
+        } else if (i === currentStep) {
+          stepEl.classList.add('active');
+        }
+      }
+      updateProgressBar();
+    }
+
+    // Show step with smooth transition
+    function showStep(step) {
+      document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
+      
+      const contentMap = {
+        1: 'formStep',
+        2: 'formStep',
+        3: 'reviewStep',
+        4: 'confirmationStep'
+      };
+      
+      const contentId = contentMap[step];
+      if (contentId) {
+        document.getElementById(contentId).classList.remove('hidden');
+      }
+      
+      updateButtons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Update button states
+    function updateButtons() {
+      const backBtn = document.getElementById('backBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      
+      backBtn.disabled = currentStep === 1;
+      
+      const buttonConfig = {
+        1: { text: 'Continue', handler: nextStep },
+        2: { text: 'Review Request', handler: nextStep },
+        3: { text: 'Submit Request', handler: nextStep },
+        4: { text: 'Start New Request', handler: startNewRequest }
+      };
+      
+      const config = buttonConfig[currentStep];
+      nextBtn.textContent = config.text;
+      nextBtn.onclick = config.handler;
+    }
+
+    // Validate form with visual feedback
+    function validateForm() {
+      let isValid = true;
+      const requiredFields = {
+        retailerName: 'Retailer name',
+        location: 'Location',
+        contactPerson: 'Contact person',
+        phone: 'Phone number',
+        deliveryDate: 'Delivery date',
+        productType: 'Product category',
+        quantity: 'Quantity'
+      };
+      
+      Object.keys(requiredFields).forEach(field => {
+        const input = document.getElementById(field);
+        const error = document.getElementById(field + 'Error');
+        const value = input.value.trim();
+        
+        if (!value) {
+          error.textContent = `${requiredFields[field]} is required`;
+          error.classList.add('show');
+          input.classList.add('error-field');
+          isValid = false;
+        } else {
+          // Additional validation
+          if (field === 'phone' && !validatePhone(value)) {
+            error.textContent = 'Enter a valid phone number';
+            error.classList.add('show');
+            input.classList.add('error-field');
+            isValid = false;
+          } else if (field === 'quantity' && parseInt(value) <= 0) {
+            error.textContent = 'Quantity must be greater than 0';
+            error.classList.add('show');
+            input.classList.add('error-field');
+            isValid = false;
+          } else if (field === 'deliveryDate') {
+            const selectedDate = new Date(value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (selectedDate < today) {
+              error.textContent = 'Delivery date must be in the future';
+              error.classList.add('show');
+              input.classList.add('error-field');
+              isValid = false;
+            } else {
+              error.classList.remove('show');
+              input.classList.remove('error-field');
+            }
+          } else {
+            error.classList.remove('show');
+            input.classList.remove('error-field');
+          }
+        }
+      });
+      
+      return isValid;
+    }
+
+    // Validate phone number
+    function validatePhone(phone) {
+      const cleaned = phone.replace(/\D/g, '');
+      return cleaned.length >= 10;
+    }
+
+    // Format phone number
+    function formatPhoneNumber(value) {
+      const cleaned = value.replace(/\D/g, '');
+      if (cleaned.length === 0) return '';
+      if (cleaned.length <= 3) return cleaned;
+      if (cleaned.length <= 6) return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+    }
+
+    // Next step with validation
+    function nextStep() {
+      if (currentStep === 2) {
+        if (!validateForm()) {
+          showToast('Please fix the errors above', 'error');
+          return;
+        }
+        saveFormData();
+        populateReview();
+      } else if (currentStep === 3) {
+        submitRequest();
+        return;
+      }
+      
+      if (currentStep < totalSteps) {
+        currentStep++;
+        updateStepIndicator();
+        showStep(currentStep);
+        showToast(`Step ${currentStep} of ${totalSteps}`, 'success');
+      }
+    }
+
+    // Previous step
+    function previousStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateStepIndicator();
+        showStep(currentStep);
+      }
+    }
+
+    // Populate review screen
+    function populateReview() {
+      const fields = {
+        customName: 'reviewCustomName',
+        address: 'reviewLocation',
+        contactPerson: 'reviewContactPerson',
+        phone: 'reviewPhone',
+        deliveryDate: 'reviewDeliveryDate',
+        productType: 'reviewProductType',
+        quantity: 'reviewQuantity',
+        specialInstructions: 'reviewSpecialInstructions'
+      };
+      
+      Object.keys(fields).forEach(fieldId => {
+        const value = document.getElementById(fieldId).value;
+        const reviewEl = document.getElementById(fields[fieldId]);
+        
+        if (fieldId === 'deliveryDate') {
+          reviewEl.textContent = new Date(value).toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          });
+        } else if (fieldId === 'quantity') {
+          reviewEl.textContent = value + ' units';
+        } else {
+          reviewEl.textContent = value;
+        }
+      });
+      
+      const specialInstructions = document.getElementById('specialInstructions').value;
+      const section = document.getElementById('specialInstructionsSection');
+      if (specialInstructions) {
+        section.classList.remove('hidden');
+      } else {
+        section.classList.add('hidden');
+      }
+    }
+
+    // Submit request
+    function submitRequest() {
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.disabled = true;
+      nextBtn.innerHTML = '<span class="loading-spinner"></span> Processing...';
+      
+      setTimeout(() => {
+        const requestId = 'DLV-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        document.getElementById('requestId').textContent = requestId;
+        
+        currentStep++;
+        updateStepIndicator();
+        showStep(currentStep);
+        
+        showToast('Request submitted successfully! 🎉', 'success');
+        clearFormData();
+        
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = 'Start New Request';
+      }, 800);
+    }
+
+    // Start new request
+    function startNewRequest() {
+      currentStep = 1;
+      document.getElementById('deliveryForm').reset();
+      clearAllErrorMessages();
+      updateStepIndicator();
+      showStep(currentStep);
+      showToast('Form cleared. Ready for new request!', 'success');
+    }
+
+    // Clear error messages
+    function clearAllErrorMessages() {
+      document.querySelectorAll('.error').forEach(el => el.classList.remove('show'));
+      document.querySelectorAll('.error-field').forEach(el => el.classList.remove('error-field'));
+    }
+
+    // Real-time input validation
+    document.getElementById('deliveryForm').addEventListener('input', (e) => {
+      const field = e.target;
+      const error = document.getElementById(field.id + 'Error');
+      const value = field.value.trim();
+      
+      // Phone number formatting
+      if (field.id === 'phone') {
+        e.target.value = formatPhoneNumber(e.target.value);
+      }
+      
+      // Real-time validation feedback
+      if (field.id === 'quantity') {
+        const num = parseInt(value);
+        if (value && num > 0) {
+          error.classList.remove('show');
+          field.classList.remove('error-field');
+        }
+      } else if (field.id === 'deliveryDate') {
+        if (value) {
+          const selectedDate = new Date(value);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          
+          if (selectedDate >= today) {
+            error.classList.remove('show');
+            field.classList.remove('error-field');
+          }
+        }
+      } else if (value) {
+        error.classList.remove('show');
+        field.classList.remove('error-field');
+      }
+      
+      saveFormData();
+    });
+
+    // Show toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideDown 0.3s ease-out reverse';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Save form data to localStorage
+    function saveFormData() {
+      const formData = {
+        customerName: document.getElementById('contact-person-input').value, //Matches your"Contact Person"
+        address: document.getElementById('store-location-input').value, //Matches your "Store Location"
+        contactPerson: document.getElementById('contactPerson').value,
+        phone: document.getElementById('phone-number-input').value, //Matches your "Phone Number"
+        deliveryDate: document.getElementById('deliveryDate').value, 
+        productType: document.getElementById('productType').value,
+        quantity: document.getElementById('quantity').value,
+        specialInstructions: document.getElementById('specialInstructions').value
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    }
+
+    // Load form data from localStorage
+    function loadFormData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const formData = JSON.parse(saved);
+          Object.keys(formData).forEach(key => {
+            const el = document.getElementById(key);
+            if (el) el.value = formData[key];
+          });
+        }
+      } catch (e) {
+        console.error('Error loading form data:', e);
+      }
+    }
+
+    // Clear form data
+    function clearFormData() {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && currentStep < 4) {
+        e.preventDefault();
+        if (currentStep === 3 || currentStep === 2) {
+          nextStep();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

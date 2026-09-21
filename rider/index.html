@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reflex Rider - Delivery Dashboard</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+
+
+    <!-- Top App Bar -->
+
+    <nav class="bg-slate-950 border-b border-slate-800 px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+
+        <div class="flex items-center gap-3">
+
+            <div class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xl tracking-wider">
+
+                REFLEX
+
+            </div>
+
+            <span class="text-xs font-bold text-slate-400 tracking-widest uppercase hidden sm:inline border-l border-slate-800 pl-3">
+
+                Rider Dashboard
+
+            </span>
+
+        </div>
+
+
+        <div class="flex items-center gap-4">
+
+            <div class="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-500/20">
+
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+
+                Online
+
+            </div>
+
+            <span class="text-sm text-slate-300 font-medium">
+
+                Juma Pikipiki
+
+            </span>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- Main -->
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+
+
+        <!-- Header -->
+
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
+
+            <div>
+
+                <h1 class="text-2xl font-bold tracking-tight">
+
+                    My Deliveries
+
+                </h1>
+
+                <p class="text-sm text-slate-400 mt-1">
+
+                    Deliveries assigned to you
+
+                </p>
+
+            </div>
+
+
+            <div class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-3">
+
+                <p class="text-xs text-slate-500 uppercase tracking-wider">
+
+                    Rider ID
+
+                </p>
+
+                <p class="text-sm font-bold text-amber-400">
+
+                    rider_01
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Delivery List -->
+
+        <div
+            id="deliveries-list"
+            class="space-y-5"
+        ></div>
+
+
+
+        <!-- Empty State -->
+
+        <div
+            id="empty-state"
+            class="hidden bg-slate-950 border border-slate-800 border-dashed rounded-2xl p-12 text-center text-slate-500"
+        >
+
+            <span class="text-4xl block mb-3">
+
+                🏍️
+
+            </span>
+
+            <p class="text-sm font-medium text-slate-400">
+
+                No active deliveries
+
+            </p>
+
+            <p class="text-xs text-slate-600 mt-1">
+
+                New assignments will appear here.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Back -->
+
+        <a
+            href="../index.html"
+            class="inline-block mt-6 text-sm text-slate-400 hover:text-amber-400 transition"
+        >
+
+            ← Back to Home
+
+        </a>
+
+    </main>
+
+
+
+    <!-- Firebase Logic -->
+
+    <script type="module">
+
+        import {
+            db,
+            ref,
+            onValue,
+            update
+        } from "../firebase.js";
+
+
+        const RIDER_ID =
+            "rider_01";
+
+
+        const deliveriesList =
+            document.getElementById(
+                "deliveries-list"
+            );
+
+
+        const emptyState =
+            document.getElementById(
+                "empty-state"
+            );
+
+
+        /*
+        ---------------------------------
+        REAL-TIME DELIVERY LIST
+        ---------------------------------
+        */
+
+        onValue(
+            ref(db, "deliveries"),
+            (snapshot) => {
+
+                const deliveries =
+                    snapshot.val() || {};
+
+
+                deliveriesList.innerHTML = "";
+
+
+                const activeDeliveries =
+                    Object.values(deliveries)
+                        .filter(
+                            delivery =>
+                                delivery.riderId === RIDER_ID &&
+                                (
+                                    delivery.status === "ASSIGNED" ||
+                                    delivery.status === "PICKED_UP"
+                                )
+                        );
+
+
+                /*
+                Show empty state
+                */
+
+                if (
+                    activeDeliveries.length === 0
+                ) {
+
+                    emptyState.classList.remove(
+                        "hidden"
+                    );
+
+                    return;
+
+                }
+
+
+                emptyState.classList.add(
+                    "hidden"
+                );
+
+
+                /*
+                Render deliveries
+                */
+
+                activeDeliveries.forEach(
+                    (delivery) => {
+
+                        const card =
+                            document.createElement("div");
+
+
+                        let badgeClass =
+                            "bg-amber-500/10 text-amber-400 border-amber-500/20";
+
+
+                        let buttonText =
+                            "Mark as Picked Up";
+
+
+                        let buttonClass =
+                            "bg-amber-500 hover:bg-amber-400 text-slate-950";
+
+
+                        if (
+                            delivery.status === "PICKED_UP"
+                        ) {
+
+                            badgeClass =
+                                "bg-purple-500/10 text-purple-400 border-purple-500/20";
+
+                            buttonText =
+                                "Mark as Delivered";
+
+                            buttonClass =
+                                "bg-emerald-500 hover:bg-emerald-400 text-slate-950";
+
+                        }
+
+
+                        card.className =
+                            "bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-lg";
+
+
+                        card.innerHTML = `
+
+                            <div class="flex flex-col md:flex-row justify-between gap-5">
+
+                                <div class="space-y-3 flex-1">
+
+                                    <div class="flex items-center gap-2">
+
+                                        <span class="text-xs font-extrabold text-amber-400 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">
+
+                                            ${delivery.id}
+
+                                        </span>
+
+
+                                        <span class="status-badge text-xs font-bold px-2.5 py-1 rounded-md border ${badgeClass}">
+
+                                            ${delivery.status}
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <h2 class="text-lg font-bold">
+
+                                        ${delivery.customerName}
+
+                                    </h2>
+
+
+                                    <p class="text-sm text-slate-400">
+
+                                        📍 ${delivery.address}
+
+                                    </p>
+
+
+                                    <p class="text-sm text-slate-500">
+
+                                        📱 ${delivery.phone}
+
+                                    </p>
+
+
+                                    <p class="text-sm text-slate-500">
+
+                                        📦 ${delivery.itemDescription}
+
+                                    </p>
+
+                                </div>
+
+
+                                <div class="flex items-center">
+
+                                    <button
+                                        class="status-button ${buttonClass} font-bold text-sm px-5 py-3 rounded-xl transition active:scale-95"
+                                        data-id="${delivery.id}"
+                                        data-status="${delivery.status}"
+                                    >
+
+                                        ${buttonText}
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+
+                        deliveriesList.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+
+        /*
+        ---------------------------------
+        UPDATE DELIVERY STATUS
+        ---------------------------------
+        */
+
+        deliveriesList.addEventListener(
+            "click",
+            async (event) => {
+
+                if (
+                    !event.target.classList.contains(
+                        "status-button"
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                const button =
+                    event.target;
+
+
+                const deliveryId =
+                    button.dataset.id;
+
+
+                const currentStatus =
+                    button.dataset.status;
+
+
+                let newStatus;
+
+
+                if (
+                    currentStatus === "ASSIGNED"
+                ) {
+
+                    newStatus =
+                        "PICKED_UP";
+
+                }
+
+                else if (
+                    currentStatus === "PICKED_UP"
+                ) {
+
+                    newStatus =
+                        "DELIVERED";
+
+                }
+
+
+                if (!newStatus) {
+
+                    return;
+
+                }
+
+
+                button.disabled = true;
+
+                button.textContent =
+                    "Updating…";
+
+
+                try {
+
+                    await update(
+                        ref(
+                            db,
+                            `deliveries/${deliveryId}`
+                        ),
+                        {
+
+                            status:
+                                newStatus,
+
+                            updatedAt:
+                                Date.now()
+
+                        }
+                    );
+
+
+                    /*
+                    onValue()
+                    automatically refreshes
+                    the Rider screen.
+                    */
+
+                } catch (error) {
+
+                    console.error(
+                        "Status update failed:",
+                        error
+                    );
+
+
+                    alert(
+                        "Could not update delivery status."
+                    );
+
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        currentStatus === "ASSIGNED"
+                            ? "Mark as Picked Up"
+                            : "Mark as Delivered";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

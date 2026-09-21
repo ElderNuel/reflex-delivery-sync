@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>REFLEX | Delivery Coordination System</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-slate-950 border-b border-slate-800 px-6 py-4">
+
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+
+            <div class="flex items-center gap-3">
+
+                <div class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xl tracking-wider">
+                    REFLEX
+                </div>
+
+                <span class="hidden sm:inline text-xs font-bold text-slate-400 uppercase tracking-widest border-l border-slate-800 pl-3">
+                    Delivery Coordination
+                </span>
+
+            </div>
+
+            <span class="flex items-center gap-2 text-xs font-semibold text-emerald-400">
+
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+
+                Real-Time Sync
+
+            </span>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Hero Section -->
+
+    <main class="max-w-6xl mx-auto px-6 py-16">
+
+        <section class="text-center max-w-3xl mx-auto">
+
+            <p class="text-amber-400 font-bold text-sm uppercase tracking-widest mb-4">
+                Delivery Coordination System
+            </p>
+
+            <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">
+
+                Manage deliveries from
+                <span class="text-amber-400">
+                    request to completion.
+                </span>
+
+            </h1>
+
+            <p class="text-slate-400 mt-6 text-lg leading-relaxed">
+
+                Reflex gives retailers, dispatchers, and riders one connected
+                system for managing delivery requests and tracking delivery
+                progress in real time.
+
+            </p>
+
+        </section>
+
+
+        <!-- Workflow -->
+
+        <section class="mt-16">
+
+            <h2 class="text-center text-sm font-bold text-slate-500 uppercase tracking-widest mb-8">
+                Delivery Workflow
+            </h2>
+
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+
+                <div class="bg-slate-950 border border-slate-800 rounded-xl px-6 py-4 text-center">
+
+                    <p class="text-xs text-slate-500 mb-1">
+                        01
+                    </p>
+
+                    <p class="font-bold text-amber-400">
+                        REQUESTED
+                    </p>
+
+                </div>
+
+
+                <span class="text-slate-600 text-xl">
+                    →
+                </span>
+
+
+                <div class="bg-slate-950 border border-slate-800 rounded-xl px-6 py-4 text-center">
+
+                    <p class="text-xs text-slate-500 mb-1">
+                        02
+                    </p>
+
+                    <p class="font-bold text-blue-400">
+                        ASSIGNED
+                    </p>
+
+                </div>
+
+
+                <span class="text-slate-600 text-xl">
+                    →
+                </span>
+
+
+                <div class="bg-slate-950 border border-slate-800 rounded-xl px-6 py-4 text-center">
+
+                    <p class="text-xs text-slate-500 mb-1">
+                        03
+                    </p>
+
+                    <p class="font-bold text-purple-400">
+                        PICKED UP
+                    </p>
+
+                </div>
+
+
+                <span class="text-slate-600 text-xl">
+                    →
+                </span>
+
+
+                <div class="bg-slate-950 border border-slate-800 rounded-xl px-6 py-4 text-center">
+
+                    <p class="text-xs text-slate-500 mb-1">
+                        04
+                    </p>
+
+                    <p class="font-bold text-emerald-400">
+                        DELIVERED
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Role Selection -->
+
+        <section class="mt-20">
+
+            <div class="text-center mb-10">
+
+                <h2 class="text-2xl font-bold">
+                    Choose your workspace
+                </h2>
+
+                <p class="text-slate-400 text-sm mt-2">
+                    Select a role to access its delivery workflow.
+                </p>
+
+            </div>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+
+                <!-- Retailer -->
+
+                <a
+                    href="./retailer/index.html"
+                    class="group bg-slate-950 border border-slate-800 hover:border-amber-500 rounded-2xl p-7 transition hover:-translate-y-1"
+                >
+
+                    <div class="text-4xl mb-5">
+                        🏪
+                    </div>
+
+                    <h3 class="text-xl font-bold">
+                        Retailer
+                    </h3>
+
+                    <p class="text-sm text-slate-400 mt-3 leading-relaxed">
+
+                        Create delivery requests and track delivery progress.
+
+                    </p>
+
+                    <div class="mt-6 text-amber-400 text-sm font-bold">
+
+                        Open Retailer Portal →
+
+                    </div>
+
+                </a>
+
+
+                <!-- Dispatcher -->
+
+                <a
+                    href="./dispatcher/index.html"
+                    class="group bg-slate-950 border border-slate-800 hover:border-blue-500 rounded-2xl p-7 transition hover:-translate-y-1"
+                >
+
+                    <div class="text-4xl mb-5">
+                        📋
+                    </div>
+
+                    <h3 class="text-xl font-bold">
+                        Dispatcher
+                    </h3>
+
+                    <p class="text-sm text-slate-400 mt-3 leading-relaxed">
+
+                        View incoming requests and assign deliveries to riders.
+
+                    </p>
+
+                    <div class="mt-6 text-blue-400 text-sm font-bold">
+
+                        Open Dispatcher Dashboard →
+
+                    </div>
+
+                </a>
+
+
+                <!-- Rider -->
+
+                <a
+                    href="./rider/index.html"
+                    class="group bg-slate-950 border border-slate-800 hover:border-emerald-500 rounded-2xl p-7 transition hover:-translate-y-1"
+                >
+
+                    <div class="text-4xl mb-5">
+                        🏍️
+                    </div>
+
+                    <h3 class="text-xl font-bold">
+                        Rider
+                    </h3>
+
+                    <p class="text-sm text-slate-400 mt-3 leading-relaxed">
+
+                        View assigned deliveries and update delivery status.
+
+                    </p>
+
+                    <div class="mt-6 text-emerald-400 text-sm font-bold">
+
+                        Open Rider Dashboard →
+
+                    </div>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- System Information -->
+
+        <section class="mt-20 bg-slate-950 border border-slate-800 rounded-2xl p-8">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+
+                <div>
+
+                    <p class="text-2xl font-bold text-amber-400">
+                        3
+                    </p>
+
+                    <p class="text-sm text-slate-400 mt-2">
+                        Connected User Roles
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <p class="text-2xl font-bold text-blue-400">
+                        Live
+                    </p>
+
+                    <p class="text-sm text-slate-400 mt-2">
+                        Delivery Synchronisation
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <p class="text-2xl font-bold text-emerald-400">
+                        4
+                    </p>
+
+                    <p class="text-sm text-slate-400 mt-2">
+                        Delivery Status Stages
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+
+    <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+
+        REFLEX — Real-Time Delivery Coordination System
+
+    </footer>
+
+</body>
+</html>

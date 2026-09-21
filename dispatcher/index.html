@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reflex Admin - Dispatch Engine</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+
+
+    <!-- Top App Bar -->
+
+    <nav class="bg-slate-950 border-b border-slate-800 px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+
+        <div class="flex items-center gap-3">
+
+            <div class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xl tracking-wider shadow-lg shadow-amber-500/10">
+
+                REFLEX
+
+            </div>
+
+            <span class="text-xs font-bold text-slate-400 tracking-widest uppercase hidden sm:inline border-l border-slate-800 pl-3">
+
+                Dispatch Engine
+
+            </span>
+
+        </div>
+
+
+        <div class="flex items-center gap-4">
+
+            <div class="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-500/20">
+
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+
+                Dashboard Active
+
+            </div>
+
+            <span class="text-sm text-slate-300 font-medium">
+
+                Milkah (Dispatcher)
+
+            </span>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- Main -->
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+
+            <!-- LEFT -->
+
+            <section class="lg:col-span-2 space-y-6">
+
+
+                <div>
+
+                    <h1 class="text-2xl font-bold tracking-tight">
+
+                        Inbound Delivery Requests
+
+                    </h1>
+
+                    <p class="text-xs text-slate-400 mt-1">
+
+                        Live requests from retailers
+
+                    </p>
+
+                </div>
+
+
+                <!-- Open Requests -->
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6">
+
+                    <div class="flex justify-between items-center mb-5">
+
+                        <div>
+
+                            <h2 class="text-lg font-bold">
+
+                                New Requests
+
+                            </h2>
+
+                            <p class="text-xs text-slate-500">
+
+                                Waiting for rider assignment
+
+                            </p>
+
+                        </div>
+
+                        <span
+                            id="requestCount"
+                            class="text-xs text-slate-500"
+                        ></span>
+
+                    </div>
+
+
+                    <div
+                        id="deliveries-list"
+                        class="space-y-4"
+                    ></div>
+
+
+                    <div
+                        id="empty-state"
+                        class="bg-slate-900 border border-slate-800 border-dashed rounded-2xl p-10 text-center text-slate-500"
+                    >
+
+                        <span class="text-4xl block mb-3">
+                            📋
+                        </span>
+
+                        <p class="text-sm font-medium text-slate-400">
+
+                            No new delivery requests
+
+                        </p>
+
+                        <p class="text-xs text-slate-600 mt-1">
+
+                            New retailer requests will appear here automatically.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Active Trips -->
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6">
+
+                    <div class="mb-5">
+
+                        <h2 class="text-lg font-bold">
+
+                            Active Trips
+
+                        </h2>
+
+                        <p class="text-xs text-slate-500">
+
+                            Currently assigned deliveries
+
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        id="active-trips"
+                        class="space-y-4"
+                    ></div>
+
+
+                    <div
+                        id="active-empty"
+                        class="text-center py-8 text-slate-500 text-sm"
+                    >
+
+                        No active trips.
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- RIGHT -->
+
+            <section class="space-y-6">
+
+
+                <div>
+
+                    <h2 class="text-xl font-bold">
+
+                        Fleet Monitoring
+
+                    </h2>
+
+                    <p class="text-xs text-slate-400 mt-1">
+
+                        Real-time rider status
+
+                    </p>
+
+                </div>
+
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+
+
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">
+
+                        Active Riders
+
+                    </h3>
+
+
+                    <!-- Rider 1 -->
+
+                    <div class="flex items-center justify-between p-3.5 bg-slate-900 border border-slate-800/60 rounded-xl">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-10 h-10 bg-slate-800/80 rounded-xl flex items-center justify-center font-bold text-lg">
+
+                                🏍️
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-sm font-semibold text-slate-200">
+
+                                    Juma Pikipiki
+
+                                </p>
+
+                                <p class="text-xs text-slate-500">
+
+                                    KMCA 123X • Nairobi Central
+
+                                </p>
+
+                                <p class="text-[10px] text-slate-600">
+
+                                    rider_01
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-md border border-emerald-500/20">
+
+                            AVAILABLE
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- Rider 2 -->
+
+                    <div class="flex items-center justify-between p-3.5 bg-slate-900 border border-slate-800/60 rounded-xl">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-10 h-10 bg-slate-800/80 rounded-xl flex items-center justify-center font-bold text-lg">
+
+                                🏍️
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-sm font-semibold text-slate-200">
+
+                                    Moraa Rides
+
+                                </p>
+
+                                <p class="text-xs text-slate-500">
+
+                                    Rider Fleet
+
+                                </p>
+
+                                <p class="text-[10px] text-slate-600">
+
+                                    rider_03
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-md border border-emerald-500/20">
+
+                            AVAILABLE
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+        <a
+            href="../index.html"
+            class="inline-block mt-6 text-sm text-slate-400 hover:text-amber-400 transition"
+        >
+
+            ← Back to Home
+
+        </a>
+
+    </main>
+
+
+
+    <!-- Firebase Logic -->
+
+    <script type="module">
+
+        import {
+            db,
+            ref,
+            onValue,
+            update
+        } from "../firebase.js";
+
+
+        const listContainer =
+            document.getElementById("deliveries-list");
+
+        const emptyState =
+            document.getElementById("empty-state");
+
+        const activeTrips =
+            document.getElementById("active-trips");
+
+        const activeEmpty =
+            document.getElementById("active-empty");
+
+        const requestCount =
+            document.getElementById("requestCount");
+
+
+        /*
+        ---------------------------------
+        REAL-TIME DATABASE LISTENER
+        ---------------------------------
+        */
+
+        onValue(
+            ref(db, "deliveries"),
+            (snapshot) => {
+
+                const deliveries =
+                    snapshot.val() || {};
+
+
+                const items =
+                    Object.values(deliveries);
+
+
+                /*
+                -----------------------------
+                OPEN REQUESTS
+                -----------------------------
+                */
+
+                const openRequests =
+                    items.filter(
+                        delivery =>
+                            delivery.status === "OPEN"
+                    );
+
+
+                listContainer.innerHTML = "";
+
+
+                requestCount.textContent =
+                    `${openRequests.length} request${openRequests.length === 1 ? "" : "s"}`;
+
+
+                if (openRequests.length === 0) {
+
+                    emptyState.style.display =
+                        "block";
+
+                } else {
+
+                    emptyState.style.display =
+                        "none";
+
+
+                    openRequests.forEach(
+                        (delivery) => {
+
+                            const card =
+                                document.createElement("div");
+
+
+                            card.className =
+                                "bg-slate-900 border border-slate-800 rounded-2xl p-5";
+
+
+                            card.innerHTML = `
+
+                                <div class="flex flex-col gap-4">
+
+                                    <div>
+
+                                        <div class="flex items-center gap-2 mb-2">
+
+                                            <span class="text-[10px] font-extrabold text-amber-400 tracking-wider bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">
+
+                                                ${delivery.id}
+
+                                            </span>
+
+                                            <span class="text-[10px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded">
+
+                                                OPEN
+
+                                            </span>
+
+                                        </div>
+
+
+                                        <h3 class="font-bold text-lg">
+
+                                            ${delivery.customerName}
+
+                                        </h3>
+
+
+                                        <p class="text-sm text-slate-400 mt-2">
+
+                                            📍 ${delivery.address}
+
+                                        </p>
+
+
+                                        <p class="text-xs text-slate-500 mt-1">
+
+                                            📱 ${delivery.phone}
+
+                                        </p>
+
+
+                                        <p class="text-xs text-slate-500 mt-1">
+
+                                            📦 ${delivery.itemDescription}
+
+                                        </p>
+
+                                    </div>
+
+
+                                    <div class="flex flex-col sm:flex-row gap-3 border-t border-slate-800 pt-4">
+
+                                        <select
+                                            id="rider-${delivery.id}"
+                                            class="bg-slate-950 border border-slate-800 text-slate-300 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-amber-500 flex-1"
+                                        >
+
+                                            <option value="">
+                                                -- Select Rider --
+                                            </option>
+
+                                            <option value="rider_01">
+                                                Juma Pikipiki (rider_01)
+                                            </option>
+
+                                            <option value="rider_03">
+                                                Moraa Rides (rider_03)
+                                            </option>
+
+                                        </select>
+
+
+                                        <button
+                                            class="assign-button bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm px-5 py-2.5 rounded-xl transition active:scale-95"
+                                            data-id="${delivery.id}"
+                                        >
+
+                                            Dispatch Trip
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            `;
+
+
+                            listContainer.appendChild(card);
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                -----------------------------
+                ACTIVE TRIPS
+                -----------------------------
+                */
+
+                const active =
+                    items.filter(
+                        delivery =>
+                            delivery.status === "ASSIGNED" ||
+                            delivery.status === "PICKED_UP"
+                    );
+
+
+                activeTrips.innerHTML = "";
+
+
+                if (active.length === 0) {
+
+                    activeEmpty.style.display =
+                        "block";
+
+                } else {
+
+                    activeEmpty.style.display =
+                        "none";
+
+
+                    active.forEach(
+                        (delivery) => {
+
+                            const card =
+                                document.createElement("div");
+
+
+                            let statusClass =
+                                "bg-amber-500/10 text-amber-400 border-amber-500/20";
+
+
+                            if (
+                                delivery.status === "PICKED_UP"
+                            ) {
+
+                                statusClass =
+                                    "bg-purple-500/10 text-purple-400 border-purple-500/20";
+
+                            }
+
+
+                            card.className =
+                                "bg-slate-900 border border-slate-800 rounded-xl p-4";
+
+
+                            card.innerHTML = `
+
+                                <div class="flex justify-between gap-4">
+
+                                    <div>
+
+                                        <div class="flex items-center gap-2">
+
+                                            <span class="text-xs font-bold text-amber-400">
+
+                                                ${delivery.id}
+
+                                            </span>
+
+                                            <span class="text-[10px] font-bold px-2 py-1 rounded border ${statusClass}">
+
+                                                ${delivery.status}
+
+                                            </span>
+
+                                        </div>
+
+
+                                        <p class="font-semibold mt-2">
+
+                                            ${delivery.customerName}
+
+                                        </p>
+
+
+                                        <p class="text-xs text-slate-500">
+
+                                            📍 ${delivery.address}
+
+                                        </p>
+
+
+                                        <p class="text-xs text-slate-500 mt-1">
+
+                                            Rider:
+                                            <span class="text-slate-300">
+                                                ${delivery.riderId || "Unassigned"}
+                                            </span>
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            `;
+
+
+                            activeTrips.appendChild(card);
+
+                        }
+                    );
+
+                }
+
+            }
+        );
+
+
+        /*
+        ---------------------------------
+        ASSIGN DELIVERY
+        ---------------------------------
+        */
+
+        listContainer.addEventListener(
+            "click",
+            async (event) => {
+
+                if (
+                    !event.target.classList.contains(
+                        "assign-button"
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                const button =
+                    event.target;
+
+
+                const deliveryId =
+                    button.dataset.id;
+
+
+                const select =
+                    document.getElementById(
+                        `rider-${deliveryId}`
+                    );
+
+
+                const selectedRider =
+                    select.value;
+
+
+                if (!selectedRider) {
+
+                    alert(
+                        "Please select a rider first."
+                    );
+
+                    return;
+
+                }
+
+
+                button.disabled = true;
+
+                button.textContent =
+                    "Dispatching…";
+
+
+                try {
+
+                    await update(
+                        ref(
+                            db,
+                            `deliveries/${deliveryId}`
+                        ),
+                        {
+
+                            riderId:
+                                selectedRider,
+
+                            status:
+                                "ASSIGNED",
+
+                            updatedAt:
+                                Date.now()
+
+                        }
+                    );
+
+
+                    /*
+                    Firebase onValue()
+                    automatically removes the
+                    request from the OPEN list.
+                    */
+
+                } catch (error) {
+
+                    console.error(
+                        "Assignment failed:",
+                        error
+                    );
+
+                    alert(
+                        "Could not assign this delivery."
+                    );
+
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        "Dispatch Trip";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

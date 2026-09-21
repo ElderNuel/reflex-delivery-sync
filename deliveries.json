@@ -1,0 +1,48 @@
+{
+  "deliveries": {
+    "DEL-9842": {
+      "id": "DEL-9842",
+      "customerName": "Amina Mohamed",
+      "phone": "+254712345678",
+      "address": "Moi Avenue, Shop #4",
+      "itemDescription": "Electronics - Smartphone",
+      "status": "ASSIGNED",
+      "riderId": "rider_01",
+      "createdAt": 1724900000000,
+      "updatedAt": 1724900500000
+    },
+    "DEL-1102": {
+      "id": "DEL-1102",
+      "customerName": "John Juma",
+      "phone": "+254722999888",
+      "address": "Biashara Street, Pharmacy Plaza",
+      "itemDescription": "Medical Supplies - Amoxicillin",
+      "status": "OPEN",
+      "riderId": null,
+      "createdAt": 1724901200000,
+      "updatedAt": 1724901200000
+    },
+    "DEL-3054": {
+      "id": "DEL-3054",
+      "customerName": "Grace Wanjiku",
+      "phone": "+254733111222",
+      "address": "Ngong Road, Junction Mall Suite 12",
+      "itemDescription": "Hardware - Drill Bits & Screws",
+      "status": "DELIVERED",
+      "riderId": "rider_03",
+      "createdAt": 1724895000000,
+      "updatedAt": 1724898600000
+    },
+    "DEL-7741": {
+      "id": "DEL-7741",
+      "customerName": "David Ochieng",
+      "phone": "+254701444555",
+      "address": "River Road, Tuk-Tuk Stage",
+      "itemDescription": "Electronics - Power Bank",
+      "status": "PICKED_UP",
+      "riderId": "rider_01",
+      "createdAt": 1724900100000,
+      "updatedAt": 1724900900000
+    }
+  }
+}
