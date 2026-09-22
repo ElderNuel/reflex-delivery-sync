@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflex - 3-in-1 Live Simulator</title>
+    <meta name="description" content="Simultaneous split-screen real-time simulator for Retailer, Dispatcher, and Rider roles.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .iframe-container {
+            height: calc(100vh - 145px);
+            min-height: 520px;
+        }
+        @media (max-width: 1024px) {
+            .iframe-container {
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-900 border-b border-slate-800 px-4 py-3 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <a href="./index.html" class="flex items-center gap-2 group">
+                    <div class="bg-amber-500 text-slate-950 font-black px-2.5 py-1 rounded-lg text-lg tracking-wider group-hover:bg-amber-400 transition">
+                        REFLEX
+                    </div>
+                </a>
+                <div class="border-l border-slate-800 pl-3">
+                    <h1 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+                        <span>3-in-1 Live Simulator</span>
+                        <span class="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded text-[11px] font-semibold border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            Live Sync Active
+                        </span>
+                    </h1>
+                    <p class="text-[11px] text-slate-400 hidden sm:block">Watch Retailer, Dispatcher, and Rider sync simultaneously in real time</p>
+                </div>
+            </div>
+
+            <!-- Global Actions & Preset Seeder -->
+            <div class="flex items-center gap-2 flex-wrap">
+                <button
+                    id="seedDemoBtn"
+                    class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3.5 py-2 rounded-xl transition active:scale-95 flex items-center gap-1.5 shadow-lg shadow-amber-500/10"
+                    title="Creates a new sample order in Firebase to test real-time dispatch"
+                >
+                    <span>⚡</span>
+                    <span>Seed Test Delivery</span>
+                </button>
+
+                <!-- View Mode Tabs -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-0.5 flex text-xs">
+                    <button id="viewSplitBtn" class="px-2.5 py-1.5 rounded-lg font-semibold bg-slate-800 text-amber-400">
+                        3-Way Split
+                    </button>
+                    <button id="viewRetailerBtn" class="px-2.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-slate-200">
+                        Retailer
+                    </button>
+                    <button id="viewDispatcherBtn" class="px-2.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-slate-200">
+                        Dispatcher
+                    </button>
+                    <button id="viewRiderBtn" class="px-2.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-slate-200">
+                        Rider
+                    </button>
+                </div>
+
+                <a
+                    href="./index.html"
+                    class="text-xs text-slate-400 hover:text-amber-400 border border-slate-800 px-2.5 py-1.5 rounded-xl bg-slate-950 transition"
+                >
+                    ← Home
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Notification Banner -->
+    <div id="statusNotification" class="hidden bg-emerald-950/80 border-b border-emerald-500/30 text-emerald-300 text-xs px-4 py-1.5 text-center font-medium transition-all">
+        Order created! Watch it pop up in the Retailer and Dispatcher views instantly.
+    </div>
+
+    <!-- Main Simulator Grid -->
+    <main class="flex-1 p-3 max-w-[1700px] w-full mx-auto">
+        <div id="simulatorGrid" class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+
+            <!-- Panel 1: Retailer Portal -->
+            <section id="colRetailer" class="flex flex-col bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl transition-all">
+                <div class="bg-slate-950/90 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-base">🏪</span>
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Retailer Portal</span>
+                            <span class="text-[10px] text-slate-400 block font-normal leading-tight">Abraham (Create Orders & QR)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button
+                            onclick="reloadFrame('retailerFrame')"
+                            title="Reload Retailer panel"
+                            class="text-xs text-slate-500 hover:text-slate-300 p-1 rounded hover:bg-slate-800"
+                        >
+                            🔄
+                        </button>
+                        <a
+                            href="./retailer/index.html"
+                            target="_blank"
+                            title="Open Retailer in new tab"
+                            class="text-xs text-slate-500 hover:text-amber-400 p-1 rounded hover:bg-slate-800"
+                        >
+                            ↗️
+                        </a>
+                    </div>
+                </div>
+                <div class="flex-1 iframe-container bg-slate-950">
+                    <iframe
+                        id="retailerFrame"
+                        src="./retailer/index.html"
+                        class="w-full h-full border-0"
+                        title="Retailer View"
+                    ></iframe>
+                </div>
+            </section>
+
+            <!-- Panel 2: Dispatcher Dashboard -->
+            <section id="colDispatcher" class="flex flex-col bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl transition-all">
+                <div class="bg-slate-950/90 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-base">📋</span>
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Dispatcher Engine</span>
+                            <span class="text-[10px] text-slate-400 block font-normal leading-tight">Milkah (Assign to Tracy, David, Grace)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button
+                            onclick="reloadFrame('dispatcherFrame')"
+                            title="Reload Dispatcher panel"
+                            class="text-xs text-slate-500 hover:text-slate-300 p-1 rounded hover:bg-slate-800"
+                        >
+                            🔄
+                        </button>
+                        <a
+                            href="./dispatcher/index.html"
+                            target="_blank"
+                            title="Open Dispatcher in new tab"
+                            class="text-xs text-slate-500 hover:text-blue-400 p-1 rounded hover:bg-slate-800"
+                        >
+                            ↗️
+                        </a>
+                    </div>
+                </div>
+                <div class="flex-1 iframe-container bg-slate-950">
+                    <iframe
+                        id="dispatcherFrame"
+                        src="./dispatcher/index.html"
+                        class="w-full h-full border-0"
+                        title="Dispatcher View"
+                    ></iframe>
+                </div>
+            </section>
+
+            <!-- Panel 3: Rider Terminal -->
+            <section id="colRider" class="flex flex-col bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl transition-all">
+                <div class="bg-slate-950/90 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-base">🏍️</span>
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Rider Terminal</span>
+                            <span class="text-[10px] text-slate-400 block font-normal leading-tight">Tracy Wangari (rider_01) / Fleet</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button
+                            onclick="reloadFrame('riderFrame')"
+                            title="Reload Rider panel"
+                            class="text-xs text-slate-500 hover:text-slate-300 p-1 rounded hover:bg-slate-800"
+                        >
+                            🔄
+                        </button>
+                        <a
+                            href="./rider/index.html"
+                            target="_blank"
+                            title="Open Rider in new tab"
+                            class="text-xs text-slate-500 hover:text-emerald-400 p-1 rounded hover:bg-slate-800"
+                        >
+                            ↗️
+                        </a>
+                    </div>
+                </div>
+                <div class="flex-1 iframe-container bg-slate-950">
+                    <iframe
+                        id="riderFrame"
+                        src="./rider/index.html"
+                        class="w-full h-full border-0"
+                        title="Rider View"
+                    ></iframe>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer / Instructions bar -->
+    <footer class="bg-slate-900/90 border-t border-slate-800 px-4 py-2 text-xs text-slate-400 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-4">
+            <span class="font-semibold text-slate-300">Live Demo Flow:</span>
+            <span class="text-slate-400">1. Fill Retailer order (or click "Seed Test Delivery")</span>
+            <span class="text-slate-500">→</span>
+            <span class="text-slate-400">2. Dispatch rider in Center panel</span>
+            <span class="text-slate-500">→</span>
+            <span class="text-slate-400">3. Pick up & Deliver in Right panel</span>
+        </div>
+        <div class="text-[11px] text-slate-500 font-mono">
+            Powered by Firebase Realtime Database
+        </div>
+    </footer>
+
+    <!-- Firebase Seeder & Controller Script -->
+    <script type="module">
+        import { db, ref, set } from "./firebase.js";
+        import { getDeliveryHash } from "./qr-utils.js";
+
+        window.reloadFrame = function(id) {
+            const frame = document.getElementById(id);
+            if (frame) {
+                frame.src = frame.src;
+            }
+        };
+
+        const grid = document.getElementById("simulatorGrid");
+        const colRetailer = document.getElementById("colRetailer");
+        const colDispatcher = document.getElementById("colDispatcher");
+        const colRider = document.getElementById("colRider");
+
+        const btnSplit = document.getElementById("viewSplitBtn");
+        const btnRetailer = document.getElementById("viewRetailerBtn");
+        const btnDispatcher = document.getElementById("viewDispatcherBtn");
+        const btnRider = document.getElementById("viewRiderBtn");
+
+        function setViewMode(mode) {
+            const allBtns = [btnSplit, btnRetailer, btnDispatcher, btnRider];
+            allBtns.forEach(b => {
+                b.className = "px-2.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-slate-200";
+            });
+
+            if (mode === "split") {
+                btnSplit.className = "px-2.5 py-1.5 rounded-lg font-semibold bg-slate-800 text-amber-400";
+                grid.className = "grid grid-cols-1 lg:grid-cols-3 gap-3";
+                colRetailer.classList.remove("hidden");
+                colDispatcher.classList.remove("hidden");
+                colRider.classList.remove("hidden");
+            } else if (mode === "retailer") {
+                btnRetailer.className = "px-2.5 py-1.5 rounded-lg font-semibold bg-slate-800 text-amber-400";
+                grid.className = "grid grid-cols-1 gap-3";
+                colRetailer.classList.remove("hidden");
+                colDispatcher.classList.add("hidden");
+                colRider.classList.add("hidden");
+            } else if (mode === "dispatcher") {
+                btnDispatcher.className = "px-2.5 py-1.5 rounded-lg font-semibold bg-slate-800 text-blue-400";
+                grid.className = "grid grid-cols-1 gap-3";
+                colRetailer.classList.add("hidden");
+                colDispatcher.classList.remove("hidden");
+                colRider.classList.add("hidden");
+            } else if (mode === "rider") {
+                btnRider.className = "px-2.5 py-1.5 rounded-lg font-semibold bg-slate-800 text-emerald-400";
+                grid.className = "grid grid-cols-1 gap-3";
+                colRetailer.classList.add("hidden");
+                colDispatcher.classList.add("hidden");
+                colRider.classList.remove("hidden");
+            }
+        }
+
+        btnSplit.addEventListener("click", () => setViewMode("split"));
+        btnRetailer.addEventListener("click", () => setViewMode("retailer"));
+        btnDispatcher.addEventListener("click", () => setViewMode("dispatcher"));
+        btnRider.addEventListener("click", () => setViewMode("rider"));
+
+        // Seed Delivery Feature
+        const seedBtn = document.getElementById("seedDemoBtn");
+        const statusNotification = document.getElementById("statusNotification");
+
+        const SAMPLE_CUSTOMERS = [
+            { name: "Amina Mohamed", phone: "0712345678", address: "Moi Avenue, Shop #4", item: "Organic Grocery Basket" },
+            { name: "Brian Kibet", phone: "0723456789", address: "Westlands Square, 3rd Floor", item: "Tech Accessories & Cables" },
+            { name: "Carol Nduta", phone: "0734567890", address: "Kilimani Ring Road, Apt 5B", item: "Artisan Coffee Beans & Pastries" },
+            { name: "Dennis Mwangi", phone: "0798765432", address: "CBD Kimathi Street, Block C", item: "Stationery & Document Pack" }
+        ];
+
+        let seedIndex = 0;
+
+        seedBtn.addEventListener("click", async () => {
+            seedBtn.disabled = true;
+            seedBtn.textContent = "Seeding…";
+
+            const sample = SAMPLE_CUSTOMERS[seedIndex % SAMPLE_CUSTOMERS.length];
+            seedIndex++;
+
+            const id = `DEL-${Math.floor(1000 + Math.random() * 9000)}`;
+            const qrHash = getDeliveryHash(id);
+
+            const deliveryData = {
+                id: id,
+                retailerId: "retailer_01",
+                customerName: sample.name,
+                phone: sample.phone,
+                address: sample.address,
+                itemDescription: sample.item,
+                status: "OPEN",
+                assignedRider: null,
+                riderId: null,
+                qrHash: qrHash,
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+
+            try {
+                await set(ref(db, `deliveries/${id}`), deliveryData);
+
+                statusNotification.textContent = `⚡ Seeded ${id} for ${sample.name} (${sample.item})! Watch it appear live in Dispatcher.`;
+                statusNotification.classList.remove("hidden");
+
+                setTimeout(() => {
+                    statusNotification.classList.add("hidden");
+                }, 4000);
+            } catch (err) {
+                console.error("Seeding failed:", err);
+                alert("Failed to seed delivery: " + err.message);
+            } finally {
+                seedBtn.disabled = false;
+                seedBtn.innerHTML = "<span>⚡</span><span>Seed Test Delivery</span>";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -37,8 +37,8 @@
 
             </div>
 
-            <span class="text-sm text-slate-300 font-medium">
-                Moi Avenue Retailers
+            <span class="text-sm text-slate-300 font-medium flex items-center gap-2">
+                <span class="text-amber-400 font-bold">Abraham</span> (Retailer Staff) • Moi Avenue Retailers
             </span>
 
         </div>
@@ -240,14 +240,41 @@
 
 
         <!-- Back -->
-        <a
-            href="../index.html"
-            class="inline-block mt-6 text-sm text-slate-400 hover:text-amber-400 transition"
-        >
-            ← Back to Home
-        </a>
+        <div class="flex items-center justify-between mt-6">
+            <a
+                href="../index.html"
+                class="text-sm text-slate-400 hover:text-amber-400 transition"
+            >
+                ← Back to Home
+            </a>
+            <a
+                href="../simulator.html"
+                class="text-xs font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-lg hover:bg-amber-500/20 transition"
+            >
+                ⚡ Open 3-in-1 Live Simulator →
+            </a>
+        </div>
 
     </main>
+
+    <!-- Package QR Modal -->
+    <div id="qrModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-slate-100" id="qrModalTitle">Package QR Code</h3>
+                <button id="closeQrModal" class="text-slate-400 hover:text-slate-100 text-lg font-bold px-2">✕</button>
+            </div>
+            <div id="qrContainer" class="flex justify-center py-2"></div>
+            <div>
+                <p id="qrDeliveryId" class="text-xs font-mono font-bold text-amber-400"></p>
+                <p id="qrCustomer" class="text-sm font-semibold text-slate-200 mt-1"></p>
+                <p id="qrItem" class="text-xs text-slate-400"></p>
+            </div>
+            <p class="text-[11px] text-slate-500 leading-relaxed border-t border-slate-800 pt-3">
+                Affix to parcel or present to rider upon drop-off for real-time order confirmation scanning.
+            </p>
+        </div>
+    </div>
 
 
     <!-- Firebase Logic -->
@@ -260,9 +287,19 @@
             set,
             onValue
         } from "../firebase.js";
+        import {
+            generateDeliveryQR,
+            getDeliveryHash
+        } from "../qr-utils.js";
 
 
         const RETAILER_ID = "retailer_01";
+
+        const RIDER_NAMES = {
+            rider_01: "Tracy Wangari (rider_01)",
+            rider_02: "David Ochieng (rider_02)",
+            rider_03: "Grace Wanjiku (rider_03)"
+        };
 
 
         const deliveryForm =
@@ -288,6 +325,27 @@
 
         const requestCount =
             document.getElementById("requestCount");
+
+        // QR Modal elements
+        const qrModal = document.getElementById("qrModal");
+        const closeQrModal = document.getElementById("closeQrModal");
+        const qrContainer = document.getElementById("qrContainer");
+        const qrDeliveryId = document.getElementById("qrDeliveryId");
+        const qrCustomer = document.getElementById("qrCustomer");
+        const qrItem = document.getElementById("qrItem");
+
+        closeQrModal.addEventListener("click", () => qrModal.classList.add("hidden"));
+        qrModal.addEventListener("click", (e) => {
+            if (e.target === qrModal) qrModal.classList.add("hidden");
+        });
+
+        window.openPackageQR = (id, customer, item) => {
+            qrContainer.innerHTML = generateDeliveryQR(id, 180);
+            qrDeliveryId.textContent = `ORDER ID: ${id} • HASH: ${getDeliveryHash(id)}`;
+            qrCustomer.textContent = `Customer: ${customer}`;
+            qrItem.textContent = `Item: ${item}`;
+            qrModal.classList.remove("hidden");
+        };
 
 
         const STATUS_CLASSES = {
@@ -325,63 +383,42 @@
                 submitButton.disabled = true;
                 submitButton.textContent = "Submitting…";
 
-
                 const formData =
                     new FormData(event.currentTarget);
 
-
                 try {
-
                     const newDeliveryRef =
                         push(ref(db, "deliveries"));
 
-
+                    const deliveryId = `DEL-${Math.floor(1000 + Math.random() * 9000)}`;
                     const now = Date.now();
 
-
+                    // Contract compliant payload (Slide 5 / Blueprint §3)
                     await set(newDeliveryRef, {
-
-                        id: newDeliveryRef.key,
-
-                        retailerId: RETAILER_ID,
-
-                        customerName:
-                            formData.get("customerName"),
-
-                        phone:
-                            formData.get("phone"),
-
-                        address:
-                            formData.get("address"),
-
-                        itemDescription:
-                            formData.get("itemDescription"),
-
+                        id: deliveryId,
+                        customerName: formData.get("customerName"),
+                        phone: formData.get("phone"),
+                        address: formData.get("address"),
+                        itemDescription: formData.get("itemDescription"),
                         status: "OPEN",
-
+                        assignedRider: null,
                         riderId: null,
-
+                        retailerId: RETAILER_ID,
+                        qrHash: getDeliveryHash(deliveryId),
                         createdAt: now,
-
                         updatedAt: now
-
                     });
-
 
                     deliveryForm.reset();
 
                     formStatus.textContent =
-                        "Delivery request submitted successfully.";
+                        `Delivery ${deliveryId} submitted successfully! Waiting for dispatcher.`;
 
                     formStatus.classList.remove("hidden");
 
-
                     setTimeout(() => {
-
                         formStatus.classList.add("hidden");
-
-                    }, 3000);
-
+                    }, 4000);
 
                 } catch (error) {
 
@@ -423,22 +460,21 @@
                 const deliveries =
                     snapshot.val() || {};
 
-
                 requestsList.innerHTML = "";
 
-
+                // Include retailer requests and seed data
                 const myRequests =
                     Object.values(deliveries)
                         .filter(
                             delivery =>
-                                delivery.retailerId === RETAILER_ID
+                                delivery &&
+                                (!delivery.retailerId || delivery.retailerId === RETAILER_ID)
                         )
                         .sort(
                             (a, b) =>
                                 (b.createdAt || 0) -
                                 (a.createdAt || 0)
                         );
-
 
                 if (myRequests.length === 0) {
 
@@ -450,85 +486,92 @@
 
                 }
 
-
                 requestsEmptyState.classList.add("hidden");
-
 
                 requestCount.textContent =
                     `${myRequests.length} request${myRequests.length > 1 ? "s" : ""}`;
-
 
                 myRequests.forEach((delivery) => {
 
                     const card =
                         document.createElement("div");
 
-
                     const badgeClass =
                         STATUS_CLASSES[delivery.status] ||
                         STATUS_CLASSES.OPEN;
 
+                    const assigned = delivery.assignedRider || delivery.riderId;
+                    const riderLabel = assigned ? (RIDER_NAMES[assigned] || assigned) : "Waiting for Dispatcher";
 
                     card.className =
                         "bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-lg";
-
 
                     card.innerHTML = `
 
                         <div class="flex flex-col gap-4">
 
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center justify-between">
 
-                                <span class="text-xs font-extrabold text-amber-400 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">
-                                    ${delivery.id}
-                                </span>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-extrabold text-amber-400 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">
+                                        ${delivery.id || "DEL"}
+                                    </span>
 
-                                <span class="text-xs font-bold px-2.5 py-1 rounded-md ${badgeClass}">
-                                    ${delivery.status}
-                                </span>
+                                    <span class="text-xs font-bold px-2.5 py-1 rounded-md ${badgeClass}">
+                                        ${delivery.status}
+                                    </span>
+                                </div>
+
+                                <button
+                                    onclick="window.openPackageQR('${delivery.id}', '${escape(delivery.customerName || '')}', '${escape(delivery.itemDescription || '')}')"
+                                    class="text-xs text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 font-medium px-2.5 py-1 rounded-lg transition flex items-center gap-1.5"
+                                >
+                                    <span>📷</span> Package QR
+                                </button>
 
                             </div>
-
 
                             <div>
 
-                                <h2 class="text-lg font-bold">
-                                    ${delivery.customerName}
+                                <h2 class="text-lg font-bold text-slate-100">
+                                    ${delivery.customerName || "Customer"}
                                 </h2>
 
-                                <p class="text-sm text-slate-400 mt-2">
-                                    📍 ${delivery.address}
+                                <p class="text-sm text-slate-400 mt-1">
+                                    📍 ${delivery.address || "No address provided"}
                                 </p>
 
-                                <p class="text-sm text-slate-500 mt-1">
-                                    📱 ${delivery.phone}
+                                <p class="text-sm text-slate-400 mt-1">
+                                    📱 ${delivery.phone || "No phone provided"}
                                 </p>
 
-                                <p class="text-sm text-slate-500 mt-1">
-                                    📦 ${delivery.itemDescription}
+                                <p class="text-sm text-slate-300 mt-1 font-medium">
+                                    📦 ${delivery.itemDescription || "Item"}
                                 </p>
 
                             </div>
 
+                            <div class="border-t border-slate-800/80 pt-3 flex items-center justify-between text-xs">
 
-                            <div class="border-t border-slate-800 pt-3">
-
-                                <p class="text-xs text-slate-500">
-
-                                    Rider:
-
-                                    <span class="text-slate-300">
-                                        ${delivery.riderId || "Not yet assigned"}
+                                <p class="text-slate-500">
+                                    Assigned Rider:
+                                    <span class="text-slate-200 font-semibold ml-1">
+                                        ${riderLabel}
                                     </span>
-
                                 </p>
+
+                                ${delivery.status === "DELIVERED"
+                                    ? `<span class="text-emerald-400 font-semibold flex items-center gap-1">
+                                        <span>✅</span> Proof of Delivery Confirmed
+                                       </span>`
+                                    : `<span class="text-slate-500">Live Syncing</span>`
+                                }
 
                             </div>
 
                         </div>
 
                     `;
-
 
                     requestsList.appendChild(card);
 

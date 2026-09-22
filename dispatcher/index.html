@@ -157,19 +157,17 @@
 
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6">
 
-                    <div class="mb-5">
+                    <div class="mb-5 flex justify-between items-center">
 
-                        <h2 class="text-lg font-bold">
-
-                            Active Trips
-
-                        </h2>
-
-                        <p class="text-xs text-slate-500">
-
-                            Currently assigned deliveries
-
-                        </p>
+                        <div>
+                            <h2 class="text-lg font-bold">
+                                Active Trips
+                            </h2>
+                            <p class="text-xs text-slate-500">
+                                Currently assigned deliveries (ASSIGNED / PICKED_UP)
+                            </p>
+                        </div>
+                        <span id="activeCount" class="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">0 active</span>
 
                     </div>
 
@@ -186,6 +184,44 @@
                     >
 
                         No active trips.
+
+                    </div>
+
+                </div>
+
+
+                <!-- Completed Deliveries (Proof of Delivery) -->
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6">
+
+                    <div class="mb-5 flex justify-between items-center">
+
+                        <div>
+                            <h2 class="text-lg font-bold flex items-center gap-2">
+                                <span class="text-emerald-400">Completed Deliveries</span>
+                                <span class="text-xs font-normal text-slate-500">(Proof of Delivery)</span>
+                            </h2>
+                            <p class="text-xs text-slate-500">
+                                Real-time sync verification for delivered parcels
+                            </p>
+                        </div>
+                        <span id="completedCount" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">0 completed</span>
+
+                    </div>
+
+
+                    <div
+                        id="completed-trips"
+                        class="space-y-4"
+                    ></div>
+
+
+                    <div
+                        id="completed-empty"
+                        class="text-center py-8 text-slate-500 text-sm"
+                    >
+
+                        No completed deliveries yet.
 
                     </div>
 
@@ -233,7 +269,7 @@
 
                         <div class="flex items-center gap-3">
 
-                            <div class="w-10 h-10 bg-slate-800/80 rounded-xl flex items-center justify-center font-bold text-lg">
+                            <div class="w-10 h-10 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center font-bold text-lg">
 
                                 🏍️
 
@@ -243,19 +279,19 @@
 
                                 <p class="text-sm font-semibold text-slate-200">
 
-                                    Juma Pikipiki
+                                    Tracy Wangari
 
                                 </p>
 
                                 <p class="text-xs text-slate-500">
 
-                                    KMCA 123X • Nairobi Central
+                                    KMCA 123X • Nairobi CBD / Westlands
 
                                 </p>
 
-                                <p class="text-[10px] text-slate-600">
+                                <p class="text-[10px] font-mono text-amber-400">
 
-                                    rider_01
+                                    rider_01 (Online)
 
                                 </p>
 
@@ -265,7 +301,7 @@
 
                         <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-md border border-emerald-500/20">
 
-                            AVAILABLE
+                            ACTIVE
 
                         </span>
 
@@ -278,7 +314,7 @@
 
                         <div class="flex items-center gap-3">
 
-                            <div class="w-10 h-10 bg-slate-800/80 rounded-xl flex items-center justify-center font-bold text-lg">
+                            <div class="w-10 h-10 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center font-bold text-lg">
 
                                 🏍️
 
@@ -288,19 +324,19 @@
 
                                 <p class="text-sm font-semibold text-slate-200">
 
-                                    Moraa Rides
+                                    David Ochieng
 
                                 </p>
 
                                 <p class="text-xs text-slate-500">
 
-                                    Rider Fleet
+                                    KMCB 456Y • Kilimani / Upperhill
 
                                 </p>
 
-                                <p class="text-[10px] text-slate-600">
+                                <p class="text-[10px] font-mono text-blue-400">
 
-                                    rider_03
+                                    rider_02 (Online)
 
                                 </p>
 
@@ -310,7 +346,52 @@
 
                         <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-md border border-emerald-500/20">
 
-                            AVAILABLE
+                            ACTIVE
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- Rider 3 -->
+
+                    <div class="flex items-center justify-between p-3.5 bg-slate-900 border border-slate-800/60 rounded-xl">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-10 h-10 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center font-bold text-lg">
+
+                                🏍️
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-sm font-semibold text-slate-200">
+
+                                    Grace Wanjiku
+
+                                </p>
+
+                                <p class="text-xs text-slate-500">
+
+                                    KMCC 789Z • Eastleigh / Parklands
+
+                                </p>
+
+                                <p class="text-[10px] font-mono text-purple-400">
+
+                                    rider_03 (Online)
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-md border border-emerald-500/20">
+
+                            ACTIVE
 
                         </span>
 
@@ -321,14 +402,20 @@
             </section>
 
         </div>
-        <a
-            href="../index.html"
-            class="inline-block mt-6 text-sm text-slate-400 hover:text-amber-400 transition"
-        >
-
-            ← Back to Home
-
-        </a>
+        <div class="flex items-center justify-between mt-6">
+            <a
+                href="../index.html"
+                class="text-sm text-slate-400 hover:text-amber-400 transition"
+            >
+                ← Back to Home
+            </a>
+            <a
+                href="../simulator.html"
+                class="text-xs font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-lg hover:bg-amber-500/20 transition"
+            >
+                ⚡ Open 3-in-1 Live Simulator →
+            </a>
+        </div>
 
     </main>
 
@@ -358,8 +445,44 @@
         const activeEmpty =
             document.getElementById("active-empty");
 
+        const activeCount =
+            document.getElementById("activeCount");
+
+        const completedTrips =
+            document.getElementById("completed-trips");
+
+        const completedEmpty =
+            document.getElementById("completed-empty");
+
+        const completedCount =
+            document.getElementById("completedCount");
+
         const requestCount =
             document.getElementById("requestCount");
+
+        const RIDER_NAMES = {
+            rider_01: "Tracy Wangari (rider_01)",
+            rider_02: "David Ochieng (rider_02)",
+            rider_03: "Grace Wanjiku (rider_03)"
+        };
+
+        function showNotification(message, isError = false) {
+            let toast = document.getElementById("toastNotification");
+            if (!toast) {
+                toast = document.createElement("div");
+                toast.id = "toastNotification";
+                toast.className = "fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl text-sm font-semibold shadow-2xl transition-all duration-300";
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.className = `fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl text-sm font-semibold shadow-2xl transition-all duration-300 ${
+                isError ? "bg-rose-500 text-white" : "bg-emerald-500 text-slate-950"
+            }`;
+            toast.style.display = "block";
+            setTimeout(() => {
+                toast.style.display = "none";
+            }, 3500);
+        }
 
 
         /*
@@ -375,7 +498,6 @@
                 const deliveries =
                     snapshot.val() || {};
 
-
                 const items =
                     Object.values(deliveries);
 
@@ -389,12 +511,11 @@
                 const openRequests =
                     items.filter(
                         delivery =>
-                            delivery.status === "OPEN"
-                    );
+                            delivery && delivery.status === "OPEN"
+                    ).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
 
                 listContainer.innerHTML = "";
-
 
                 requestCount.textContent =
                     `${openRequests.length} request${openRequests.length === 1 ? "" : "s"}`;
@@ -410,17 +531,14 @@
                     emptyState.style.display =
                         "none";
 
-
                     openRequests.forEach(
                         (delivery) => {
 
                             const card =
                                 document.createElement("div");
 
-
                             card.className =
                                 "bg-slate-900 border border-slate-800 rounded-2xl p-5";
-
 
                             card.innerHTML = `
 
@@ -431,49 +549,32 @@
                                         <div class="flex items-center gap-2 mb-2">
 
                                             <span class="text-[10px] font-extrabold text-amber-400 tracking-wider bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">
-
                                                 ${delivery.id}
-
                                             </span>
 
                                             <span class="text-[10px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded">
-
                                                 OPEN
-
                                             </span>
 
                                         </div>
 
-
-                                        <h3 class="font-bold text-lg">
-
-                                            ${delivery.customerName}
-
+                                        <h3 class="font-bold text-lg text-slate-100">
+                                            ${delivery.customerName || "Customer"}
                                         </h3>
 
-
                                         <p class="text-sm text-slate-400 mt-2">
-
-                                            📍 ${delivery.address}
-
+                                            📍 ${delivery.address || "No address"}
                                         </p>
 
-
                                         <p class="text-xs text-slate-500 mt-1">
-
-                                            📱 ${delivery.phone}
-
+                                            📱 ${delivery.phone || "No phone"}
                                         </p>
 
-
-                                        <p class="text-xs text-slate-500 mt-1">
-
-                                            📦 ${delivery.itemDescription}
-
+                                        <p class="text-xs text-slate-300 mt-1 font-medium">
+                                            📦 ${delivery.itemDescription || "Item"}
                                         </p>
 
                                     </div>
-
 
                                     <div class="flex flex-col sm:flex-row gap-3 border-t border-slate-800 pt-4">
 
@@ -481,29 +582,25 @@
                                             id="rider-${delivery.id}"
                                             class="bg-slate-950 border border-slate-800 text-slate-300 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-amber-500 flex-1"
                                         >
-
                                             <option value="">
                                                 -- Select Rider --
                                             </option>
-
                                             <option value="rider_01">
-                                                Juma Pikipiki (rider_01)
+                                                Tracy Wangari (rider_01)
                                             </option>
-
+                                            <option value="rider_02">
+                                                David Ochieng (rider_02)
+                                            </option>
                                             <option value="rider_03">
-                                                Moraa Rides (rider_03)
+                                                Grace Wanjiku (rider_03)
                                             </option>
-
                                         </select>
-
 
                                         <button
                                             class="assign-button bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm px-5 py-2.5 rounded-xl transition active:scale-95"
                                             data-id="${delivery.id}"
                                         >
-
                                             Dispatch Trip
-
                                         </button>
 
                                     </div>
@@ -511,7 +608,6 @@
                                 </div>
 
                             `;
-
 
                             listContainer.appendChild(card);
 
@@ -530,24 +626,18 @@
                 const active =
                     items.filter(
                         delivery =>
-                            delivery.status === "ASSIGNED" ||
-                            delivery.status === "PICKED_UP"
-                    );
-
+                            delivery &&
+                            (delivery.status === "ASSIGNED" ||
+                             delivery.status === "PICKED_UP")
+                    ).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
 
                 activeTrips.innerHTML = "";
-
+                activeCount.textContent = `${active.length} active`;
 
                 if (active.length === 0) {
-
-                    activeEmpty.style.display =
-                        "block";
-
+                    activeEmpty.style.display = "block";
                 } else {
-
-                    activeEmpty.style.display =
-                        "none";
-
+                    activeEmpty.style.display = "none";
 
                     active.forEach(
                         (delivery) => {
@@ -555,69 +645,55 @@
                             const card =
                                 document.createElement("div");
 
-
                             let statusClass =
                                 "bg-amber-500/10 text-amber-400 border-amber-500/20";
 
-
-                            if (
-                                delivery.status === "PICKED_UP"
-                            ) {
-
+                            if (delivery.status === "PICKED_UP") {
                                 statusClass =
                                     "bg-purple-500/10 text-purple-400 border-purple-500/20";
-
                             }
 
+                            const assigned = delivery.assignedRider || delivery.riderId;
+                            const riderLabel = assigned ? (RIDER_NAMES[assigned] || assigned) : "Unassigned";
 
                             card.className =
                                 "bg-slate-900 border border-slate-800 rounded-xl p-4";
 
-
                             card.innerHTML = `
 
-                                <div class="flex justify-between gap-4">
+                                <div class="flex justify-between items-start gap-4">
 
-                                    <div>
+                                    <div class="space-y-1">
 
                                         <div class="flex items-center gap-2">
 
                                             <span class="text-xs font-bold text-amber-400">
-
                                                 ${delivery.id}
-
                                             </span>
 
-                                            <span class="text-[10px] font-bold px-2 py-1 rounded border ${statusClass}">
-
+                                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${statusClass}">
                                                 ${delivery.status}
-
                                             </span>
 
                                         </div>
 
-
-                                        <p class="font-semibold mt-2">
-
-                                            ${delivery.customerName}
-
+                                        <p class="font-semibold text-slate-100 text-sm mt-1">
+                                            ${delivery.customerName || "Customer"}
                                         </p>
 
-
-                                        <p class="text-xs text-slate-500">
-
-                                            📍 ${delivery.address}
-
+                                        <p class="text-xs text-slate-400">
+                                            📍 ${delivery.address || ""}
                                         </p>
 
+                                        <p class="text-xs text-slate-400">
+                                            📦 ${delivery.itemDescription || ""}
+                                        </p>
 
-                                        <p class="text-xs text-slate-500 mt-1">
-
-                                            Rider:
-                                            <span class="text-slate-300">
-                                                ${delivery.riderId || "Unassigned"}
+                                        <p class="text-xs text-slate-500 pt-1">
+                                            Assigned Rider:
+                                            <span class="text-amber-400 font-semibold">
+                                                ${riderLabel}
                                             </span>
-
                                         </p>
 
                                     </div>
@@ -626,12 +702,65 @@
 
                             `;
 
-
                             activeTrips.appendChild(card);
 
                         }
                     );
 
+                }
+
+
+                /*
+                -----------------------------
+                COMPLETED DELIVERIES
+                -----------------------------
+                */
+
+                const completed =
+                    items.filter(
+                        delivery =>
+                            delivery && delivery.status === "DELIVERED"
+                    ).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+                completedTrips.innerHTML = "";
+                completedCount.textContent = `${completed.length} completed`;
+
+                if (completed.length === 0) {
+                    completedEmpty.style.display = "block";
+                } else {
+                    completedEmpty.style.display = "none";
+
+                    completed.forEach(
+                        (delivery) => {
+                            const card = document.createElement("div");
+                            card.className = "bg-slate-900/90 border border-emerald-500/20 rounded-xl p-4";
+
+                            const assigned = delivery.assignedRider || delivery.riderId;
+                            const riderLabel = assigned ? (RIDER_NAMES[assigned] || assigned) : "Rider";
+
+                            card.innerHTML = `
+                                <div class="flex justify-between items-start gap-4">
+                                    <div class="space-y-1">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold text-slate-400 font-mono">${delivery.id}</span>
+                                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                                ✅ DELIVERED
+                                            </span>
+                                        </div>
+                                        <p class="font-semibold text-slate-200 text-sm mt-1">${delivery.customerName || "Customer"}</p>
+                                        <p class="text-xs text-slate-400">📍 ${delivery.address || ""}</p>
+                                        <p class="text-xs text-slate-500">
+                                            Fulfilled by: <span class="text-slate-300 font-medium">${riderLabel}</span>
+                                        </p>
+                                    </div>
+                                    <span class="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">
+                                        Proof Confirmed
+                                    </span>
+                                </div>
+                            `;
+                            completedTrips.appendChild(card);
+                        }
+                    );
                 }
 
             }
@@ -658,69 +787,45 @@
 
                 }
 
-
                 const button =
                     event.target;
 
-
                 const deliveryId =
                     button.dataset.id;
-
 
                 const select =
                     document.getElementById(
                         `rider-${deliveryId}`
                     );
 
-
                 const selectedRider =
                     select.value;
 
-
                 if (!selectedRider) {
-
-                    alert(
-                        "Please select a rider first."
-                    );
-
+                    showNotification("Please select a rider from the dropdown first.", true);
                     return;
-
                 }
 
-
                 button.disabled = true;
-
                 button.textContent =
                     "Dispatching…";
 
-
                 try {
-
+                    // Update both schema keys (assignedRider contract + riderId legacy)
                     await update(
                         ref(
                             db,
                             `deliveries/${deliveryId}`
                         ),
                         {
-
-                            riderId:
-                                selectedRider,
-
-                            status:
-                                "ASSIGNED",
-
-                            updatedAt:
-                                Date.now()
-
+                            assignedRider: selectedRider,
+                            riderId: selectedRider,
+                            status: "ASSIGNED",
+                            updatedAt: Date.now()
                         }
                     );
 
-
-                    /*
-                    Firebase onValue()
-                    automatically removes the
-                    request from the OPEN list.
-                    */
+                    showNotification(`Trip ${deliveryId} successfully dispatched to ${RIDER_NAMES[selectedRider] || selectedRider}!`);
 
                 } catch (error) {
 
@@ -729,13 +834,9 @@
                         error
                     );
 
-                    alert(
-                        "Could not assign this delivery."
-                    );
-
+                    showNotification("Could not assign this delivery. Please try again.", true);
 
                     button.disabled = false;
-
                     button.textContent =
                         "Dispatch Trip";
 
