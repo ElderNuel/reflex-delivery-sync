@@ -29,8 +29,8 @@ app.get("/api/config", (req, res) => {
 app.use(express.static(__dirname, { extensions: ["html", "js"] }));
 
 // Explicit route handlers for all application views and assets
-app.get(["/simulator", "/simulator.html"], (req, res) => {
-  res.sendFile(path.join(__dirname, "simulator.html"));
+app.get(["/simulator", "/simulator/", "/simulator.html", "/simulator/index.html"], (req, res) => {
+  res.sendFile(path.join(__dirname, "simulator", "index.html"));
 });
 
 app.get(["/retailer", "/retailer/", "/retailer/index.html"], (req, res) => {

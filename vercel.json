@@ -1,37 +1,25 @@
 {
-  "version": 2,
   "cleanUrls": true,
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
+      "source": "/simulator",
+      "destination": "/simulator/index.html"
     },
     {
-      "src": "/simulator",
-      "dest": "/simulator.html"
+      "source": "/simulator.html",
+      "destination": "/simulator/index.html"
     },
     {
-      "src": "/simulator.html",
-      "dest": "/simulator.html"
+      "source": "/retailer",
+      "destination": "/retailer/index.html"
     },
     {
-      "src": "/retailer/?$",
-      "dest": "/retailer/index.html"
+      "source": "/dispatcher",
+      "destination": "/dispatcher/index.html"
     },
     {
-      "src": "/dispatcher/?$",
-      "dest": "/dispatcher/index.html"
-    },
-    {
-      "src": "/rider/?$",
-      "dest": "/rider/index.html"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/rider",
+      "destination": "/rider/index.html"
     }
   ]
 }
