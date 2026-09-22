@@ -182,13 +182,19 @@ We surfaced these considerations during the sprint and addressed the highest-imp
 reflex-delivery-sync/
 │
 ├── index.html                  # Main launchpad & portal selector
-├── simulator.html              # ⚡ 3-in-1 Live Simulator (All 3 views side-by-side)
+├── simulator.html              # ⚡ 3-in-1 Live Simulator (Root entrypoint)
 ├── firebase.js                 # Shared Firebase Realtime Database configuration
 ├── qr-utils.js                 # SVG QR generator & security hash helper
 ├── server.js                   # Node.js + Express local dev server & API proxy
 ├── vercel.json                 # Vercel deployment & clean URL routing rules
 ├── package.json                # Project dependencies, start, build, and lint scripts
 ├── README.md                   # System documentation & evaluation walkthrough
+│
+├── api/
+│   └── config.js               # Native Vercel Serverless Function for /api/config
+│
+├── simulator/
+│   └── index.html              # 3-in-1 Live Simulator (Directory entrypoint)
 │
 ├── retailer/
 │   └── index.html              # Retailer Portal (Create order + generate QR)
@@ -265,10 +271,10 @@ Then open `http://localhost:8000`.
 
 ### Application URLs
 
-- **⚡ 3-in-1 Live Simulator (Recommended for Demo):** `/simulator.html` or `/simulator`
-- **Retailer View:** `/retailer/`
-- **Dispatcher View:** `/dispatcher/`
-- **Rider View:** `/rider/`
+- **⚡ 3-in-1 Live Simulator (Recommended for Demo):** `/simulator` or `/simulator.html`
+- **Retailer View:** `/retailer/` or `/retailer`
+- **Dispatcher View:** `/dispatcher/` or `/dispatcher`
+- **Rider View:** `/rider/` or `/rider`
 
 ---
 
@@ -278,25 +284,21 @@ The project includes a production-ready `vercel.json` configuration for hosting 
 
 ```json
 {
-  "version": 2,
   "cleanUrls": true,
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/server.js" },
-    { "src": "/simulator", "dest": "/simulator.html" },
-    { "src": "/simulator.html", "dest": "/simulator.html" },
-    { "src": "/retailer/?$", "dest": "/retailer/index.html" },
-    { "src": "/dispatcher/?$", "dest": "/dispatcher/index.html" },
-    { "src": "/rider/?$", "dest": "/rider/index.html" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/$1" }
+  "rewrites": [
+    { "source": "/simulator", "destination": "/simulator/index.html" },
+    { "source": "/simulator.html", "destination": "/simulator/index.html" },
+    { "source": "/retailer", "destination": "/retailer/index.html" },
+    { "source": "/dispatcher", "destination": "/dispatcher/index.html" },
+    { "source": "/rider", "destination": "/rider/index.html" }
   ]
 }
 ```
 
-### Deploying Updates to Vercel
-1. Ensure `simulator.html`, `server.js`, and `vercel.json` are committed to your GitHub repository.
-2. Vercel automatically deploys the latest commit.
-3. Access `/simulator` or `/simulator.html` directly without 404/`Cannot GET` routing errors.
+### Architecture Highlights on Vercel
+1. **Zero 404 Routing**: Directory index structures (`/simulator/index.html`, `/retailer/index.html`, `/dispatcher/index.html`, `/rider/index.html`) combined with clean rewrites ensure requests to `/simulator`, `/simulator/`, and `/simulator.html` resolve identically without trailing-slash or `Cannot GET` errors.
+2. **Native Edge API (`/api/config.js`)**: Runs as a lightweight Vercel serverless function returning the Firebase configuration directly from environment variables.
+3. **Deploying Updates**: Commit and push changes to GitHub. Vercel automatically deploys the updated build.
 
 ---
 
