@@ -168,6 +168,8 @@ We surfaced these considerations during the sprint and addressed the highest-imp
 - **HTML5** – Responsive semantic application markup
 - **Tailwind CSS** – Styling and responsive design system
 - **JavaScript (ES Modules)** – Modular client-side architecture and Firebase integration
+- **Node.js + Express** – Lightweight static delivery server and `/api/config` environment bridge
+- **Vercel Edge & Serverless** – Production deployment with `vercel.json` clean routing
 - **Firebase Realtime Database** – Distributed real-time event streaming and state synchronization
 - **Vector QR Engine (`qr-utils.js`)** – Deterministic SVG QR code generator with cryptographic parcel hashing
 - **Live Simulator (`simulator.html`)** – Side-by-side multi-portal real-time test environment
@@ -179,11 +181,14 @@ We surfaced these considerations during the sprint and addressed the highest-imp
 ```text
 reflex-delivery-sync/
 │
-├── firebase.js                 # Shared Firebase Realtime Database configuration
-├── qr-utils.js                 # SVG QR generator & security hash helper
 ├── index.html                  # Main launchpad & portal selector
 ├── simulator.html              # ⚡ 3-in-1 Live Simulator (All 3 views side-by-side)
-├── README.md                   # System documentation & evaluation rubric
+├── firebase.js                 # Shared Firebase Realtime Database configuration
+├── qr-utils.js                 # SVG QR generator & security hash helper
+├── server.js                   # Node.js + Express local dev server & API proxy
+├── vercel.json                 # Vercel deployment & clean URL routing rules
+├── package.json                # Project dependencies, start, build, and lint scripts
+├── README.md                   # System documentation & evaluation walkthrough
 │
 ├── retailer/
 │   └── index.html              # Retailer Portal (Create order + generate QR)
@@ -215,7 +220,9 @@ Enable **Firebase Realtime Database** for the project.
 
 In **Project Settings**, copy your Firebase web application configuration.
 
-### 4. Add Configuration to `firebase.js`
+### 4. Add Configuration to `firebase.js` or Environment Variables
+
+The application supports both environment variables via `/api/config` and direct fallback in `firebase.js`:
 
 ```javascript
 const firebaseConfig = {
@@ -223,51 +230,73 @@ const firebaseConfig = {
   authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
   databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
   projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
   messagingSenderId: "YOUR_SENDER_ID",
   appId: "YOUR_APP_ID"
 };
 ```
 
-Replace the placeholder values with your Firebase project's actual configuration.
-
-### 5. Configure Database Rules for Prototyping
-
-For prototype testing, the following rules may be used:
-
-```json
-{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}
-```
-
-> ⚠️ **Warning:** These rules allow unrestricted read and write access. They are suitable only for controlled prototyping and must be secured before production deployment.
-
 ---
 
 ## 💻 Running the Project Locally
 
-Because the project uses JavaScript modules and Firebase, it should be served through a local web server:
+### Option A: Using Node.js (Recommended)
+
+Install dependencies and start the local server:
+
+```bash
+npm install
+npm run dev
+```
+
+The server starts on port `3000`:
+
+```text
+http://localhost:3000
+```
+
+### Option B: Using Python HTTP Server
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then open:
-
-```text
-http://localhost:8000
-```
+Then open `http://localhost:8000`.
 
 ### Application URLs
 
-- **⚡ 3-in-1 Live Simulator (Recommended for Demo):** `http://localhost:8000/simulator.html`
-- **Retailer View:** `http://localhost:8000/retailer/`
-- **Dispatcher View:** `http://localhost:8000/dispatcher/`
-- **Rider View:** `http://localhost:8000/rider/`
+- **⚡ 3-in-1 Live Simulator (Recommended for Demo):** `/simulator.html` or `/simulator`
+- **Retailer View:** `/retailer/`
+- **Dispatcher View:** `/dispatcher/`
+- **Rider View:** `/rider/`
+
+---
+
+## 🌐 Production & Vercel Deployment
+
+The project includes a production-ready `vercel.json` configuration for hosting on Vercel (e.g. `reflexsync.vercel.app`):
+
+```json
+{
+  "version": 2,
+  "cleanUrls": true,
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/server.js" },
+    { "src": "/simulator", "dest": "/simulator.html" },
+    { "src": "/simulator.html", "dest": "/simulator.html" },
+    { "src": "/retailer/?$", "dest": "/retailer/index.html" },
+    { "src": "/dispatcher/?$", "dest": "/dispatcher/index.html" },
+    { "src": "/rider/?$", "dest": "/rider/index.html" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}
+```
+
+### Deploying Updates to Vercel
+1. Ensure `simulator.html`, `server.js`, and `vercel.json` are committed to your GitHub repository.
+2. Vercel automatically deploys the latest commit.
+3. Access `/simulator` or `/simulator.html` directly without 404/`Cannot GET` routing errors.
 
 ---
 

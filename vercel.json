@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/simulator",
+      "dest": "/simulator.html"
+    },
+    {
+      "src": "/simulator.html",
+      "dest": "/simulator.html"
+    },
+    {
+      "src": "/retailer/?$",
+      "dest": "/retailer/index.html"
+    },
+    {
+      "src": "/dispatcher/?$",
+      "dest": "/dispatcher/index.html"
+    },
+    {
+      "src": "/rider/?$",
+      "dest": "/rider/index.html"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

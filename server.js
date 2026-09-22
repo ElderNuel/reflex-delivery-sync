@@ -25,13 +25,41 @@ app.get("/api/config", (req, res) => {
   });
 });
 
-// Serve all static files from root directory
-app.use(express.static(__dirname));
+// Serve all static files from root directory with html and js extensions enabled
+app.use(express.static(__dirname, { extensions: ["html", "js"] }));
+
+// Explicit route handlers for all application views and assets
+app.get(["/simulator", "/simulator.html"], (req, res) => {
+  res.sendFile(path.join(__dirname, "simulator.html"));
+});
+
+app.get(["/retailer", "/retailer/", "/retailer/index.html"], (req, res) => {
+  res.sendFile(path.join(__dirname, "retailer", "index.html"));
+});
+
+app.get(["/dispatcher", "/dispatcher/", "/dispatcher/index.html"], (req, res) => {
+  res.sendFile(path.join(__dirname, "dispatcher", "index.html"));
+});
+
+app.get(["/rider", "/rider/", "/rider/index.html"], (req, res) => {
+  res.sendFile(path.join(__dirname, "rider", "index.html"));
+});
+
+app.get("/qr-utils.js", (req, res) => {
+  res.sendFile(path.join(__dirname, "qr-utils.js"));
+});
+
+app.get("/firebase.js", (req, res) => {
+  res.sendFile(path.join(__dirname, "firebase.js"));
+});
 
 // Fallback for SPA/direct navigation to index
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
+
+// Export default app for Vercel Serverless Function support
+export default app;
 
 app.listen(PORT, HOST, () => {
   console.log(`Reflex delivery coordination server running at http://${HOST}:${PORT}`);
